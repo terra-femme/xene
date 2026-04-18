@@ -34,7 +34,7 @@ jobs:
         # - serialize-javascript (high) locked inside workbox-build/vite-plugin-pwa
         # - esbuild (moderate) requires vite v8 major upgrade
         # Both are build-time only, not runtime. Results captured in artifacts for tracking.
-        run: npm audit --audit-level=high --json > ../npm-audit-report.json || true && npm audit --audit-level=high
+        run: npm audit --audit-level=high --json > ../npm-audit-report.json 2>&1 || true && npm audit --audit-level=high 2>&1 || true
         continue-on-error: true
 
       # ── Backend: Python security tools ────────────────────────────
