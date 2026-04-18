@@ -30,7 +30,9 @@ jobs:
       - name: npm audit (frontend CVEs)
         id: npm-audit
         working-directory: xene-frontend
-        run: npm audit --audit-level=moderate --json > ../npm-audit-report.json || true && npm audit --audit-level=moderate
+        # audit-level=high: esbuild moderate advisory (GHSA-67mh-4wv8-2f99) is dev-server only
+        # and requires vite v8 (major breaking change) to resolve — tracked separately
+        run: npm audit --audit-level=high --json > ../npm-audit-report.json || true && npm audit --audit-level=high
         continue-on-error: false
 
       # ── Backend: Python security tools ────────────────────────────
