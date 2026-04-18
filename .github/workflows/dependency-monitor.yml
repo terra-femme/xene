@@ -1,0 +1,82 @@
+name: Loop 4 — Weekly Dependency Health Monitor
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  dependency-audit:
+    name: Dependency CVE Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Frontend npm audit
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install frontend dependencies
+        working-directory: xene-frontend
+        run: npm ci
+
+      - name: npm audit (frontend)
+        id: npm-audit
+        working-directory: xene-frontend
+        run: npm audit --format=json > ../npm-audit-weekly.json || true && npm audit
+        continue-on-error: true
+
+      # Backend pip-audit
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install Python audit tools
+        run: pip install pip-audit safety
+
+      - name: Install backend dependencies
+        working-directory: xene-backend
+        run: pip install -r requirements.txt
+
+      - name: pip-audit (backend)
+        id: pip-audit
+        run: |
+          pip-audit --format=json --output=pip-audit-weekly.json || true
+          pip-audit
+        continue-on-error: true
+
+      - name: Safety scan (backend)
+        id: safety
+        working-directory: xene-backend
+        run: safety scan || true
+        continue-on-error: true
+
+      - name: Upload weekly audit reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-audit-${{ github.run_number }}
+          path: |
+            npm-audit-weekly.json
+            pip-audit-weekly.json
+          retention-days: 365
+
+      - name: Open issue if vulnerabilities found
+        if: steps.npm-audit.outcome == 'failure' || steps.pip-audit.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const targets = [];
+            if ('${{ steps.npm-audit.outcome }}' === 'failure') targets.push('xene-frontend (npm)');
+            if ('${{ steps.pip-audit.outcome }}' === 'failure') targets.push('xene-backend (pip)');
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[Loop 4] Dependency vulnerability detected - ${new Date().toISOString().split('T')[0]}`,
+              body: `## Weekly dependency scan found vulnerabilities\n\nAffected: ${targets.join(', ')}\n\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n\n**Action required:** Review and update affected packages before next deploy.`,
+              labels: ['security', 'dependencies']
+            });

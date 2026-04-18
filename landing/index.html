@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>XENE — Your Artists, Every Platform</title>
+  <meta name="description" content="Xene aggregates your followed artists across SoundCloud, Bandcamp, and more into one chronological feed. Every track, every release, every platform — in one place. We push visibility. We never steal."/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "background":               "#1a120a",
+            "surface":                  "#1a120a",
+            "surface-container":        "#271e15",
+            "surface-container-low":    "#231a12",
+            "surface-container-high":   "#32281f",
+            "surface-container-highest":"#3d332a",
+            "surface-variant":          "#3d332a",
+            "on-surface":               "#f1dfd2",
+            "on-surface-variant":       "#dbc2ae",
+            "primary":                  "#ffb873",
+            "primary-container":        "#f38e00",
+            "on-primary":               "#4b2800",
+            "secondary":                "#f6bb83",
+            "outline":                  "#a38d7a",
+            "outline-variant":          "#554334",
+            "inverse-surface":          "#f1dfd2",
+            "inverse-on-surface":       "#392e25",
+          },
+          borderRadius: {
+            DEFAULT: "0.125rem",
+            lg:      "0.25rem",
+            xl:      "0.5rem",
+            full:    "0.75rem",
+          },
+          fontFamily: {
+            headline: ["Space Grotesk"],
+            body:     ["Manrope"],
+            label:    ["Manrope"],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .glow-cyan  { box-shadow: 0 0 20px rgba(0, 229, 255, 0.4); }
+    .glow-amber { box-shadow: 0 0 20px rgba(245, 144, 4, 0.2); }
+    body { background-color: #000000; }
+    .app-feed::-webkit-scrollbar { width: 0px; }
+
+    /* Smooth scroll for About anchor */
+    html { scroll-behavior: smooth; }
+
+    /* Platform card hover lift */
+    .platform-card {
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .platform-card:hover { transform: translateY(-2px); }
+  </style>
+</head>
+
+<body class="font-body text-on-surface antialiased">
+
+<!-- ── NAV ──────────────────────────────────────────────────────── -->
+<header class="fixed top-0 w-full z-50 bg-stone-950/60 backdrop-blur-xl shadow-[0_10px_30px_-15px_rgba(245,144,4,0.1)]">
+  <div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+
+    <!-- Wordmark -->
+    <a href="#" class="text-2xl font-black tracking-tighter text-amber-500 font-['Space_Grotesk'] hover:opacity-80 transition-opacity">
+      XENE
+    </a>
+
+    <!-- Single nav link -->
+    <nav>
+      <a
+        href="#about"
+        class="font-['Space_Grotesk'] tracking-tight text-stone-300 hover:text-amber-400 transition-colors duration-200 border-b border-transparent hover:border-amber-500/50 pb-0.5"
+      >
+        About Us
+      </a>
+    </nav>
+
+    <!-- Right: Request Access CTA -->
+    <a
+      href="mailto:collab.xene@gmail.com?subject=Xene%20API%20Partnership%20Inquiry"
+      class="bg-[#00E5FF] text-black font-bold px-6 py-2 rounded-[1px] glow-cyan hover:brightness-110 transition-all active:scale-95 text-sm font-['Space_Grotesk'] uppercase tracking-widest"
+    >
+      Get In Touch
+    </a>
+
+  </div>
+</header>
+
+
+<!-- ── HERO ─────────────────────────────────────────────────────── -->
+<main class="min-h-screen pt-24 flex flex-col items-center justify-center relative overflow-hidden">
+
+  <!-- Ambient glows -->
+  <div class="absolute top-1/4 -left-20 w-96 h-96 bg-[#f59004] opacity-[0.03] blur-[120px] rounded-full pointer-events-none"></div>
+  <div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-[#00E5FF] opacity-[0.05] blur-[120px] rounded-full pointer-events-none"></div>
+
+  <section class="max-w-screen-2xl w-full px-8 flex flex-col md:flex-row items-center justify-between gap-12 relative z-10">
+
+    <!-- Left: Headline & tagline -->
+    <div class="flex-1 text-center md:text-left">
+      <div class="inline-block mb-4">
+        <span class="text-amber-500 font-headline font-light tracking-[0.4em] uppercase text-xs">
+          The Digital Performance Space
+        </span>
+      </div>
+
+      <h1 class="font-headline text-8xl md:text-9xl font-black text-on-surface leading-tight tracking-tighter mb-2">
+        XENE <span class="block text-transparent bg-clip-text bg-gradient-to-br from-amber-500 to-amber-200">FIRST</span>
+      </h1>
+
+      <p class="font-mono text-stone-500 text-lg mb-2 italic">(zee-n)</p>
+
+      <p class="font-headline text-xl md:text-2xl font-semibold text-amber-400/90 tracking-wide mt-1">
+        Check Xene First.
+      </p>
+
+      <p class="font-body text-stone-400 text-base max-w-md mt-6 leading-relaxed">
+        One feed. Every platform. Your artists — all in one place.
+        Xene pulls public activity from SoundCloud, Bandcamp, and beyond
+        into a single chronological stream, then sends fans directly back
+        to the source.
+      </p>
+
+      <!-- Platform icons row -->
+      <div class="mt-10 flex flex-wrap justify-center md:justify-start items-center gap-8 opacity-60">
+        <span class="material-symbols-outlined text-4xl text-[#00E5FF] hover:opacity-100 transition-opacity" style="font-variation-settings: 'FILL' 1;">music_note</span>
+        <span class="material-symbols-outlined text-4xl text-amber-500 hover:opacity-100 transition-opacity" style="font-variation-settings: 'FILL' 1;">equalizer</span>
+        <span class="material-symbols-outlined text-4xl text-[#00E5FF] hover:opacity-100 transition-opacity" style="font-variation-settings: 'FILL' 1;">group</span>
+        <span class="material-symbols-outlined text-4xl text-amber-500 hover:opacity-100 transition-opacity" style="font-variation-settings: 'FILL' 1;">stream</span>
+        <span class="material-symbols-outlined text-4xl text-[#00E5FF] hover:opacity-100 transition-opacity" style="font-variation-settings: 'FILL' 1;">podcasts</span>
+      </div>
+    </div>
+
+    <!-- Right: App mockup -->
+    <div class="flex-1 relative w-full max-w-lg md:max-w-xl">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-amber-500/10 via-transparent to-[#00E5FF]/10 blur-[80px] pointer-events-none"></div>
+      <div class="relative bg-stone-900/80 rounded-[40px] p-4 border border-stone-800 shadow-2xl backdrop-blur-2xl">
+        <div class="bg-stone-950 rounded-[30px] overflow-hidden aspect-[9/19.5] relative border border-stone-800/50 flex flex-col">
+
+          <!-- Phone notch -->
+          <div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-stone-900 rounded-b-2xl border-x border-b border-stone-800 flex justify-center gap-2 pt-1 z-30">
+            <div class="w-2 h-2 rounded-full bg-stone-800"></div>
+            <div class="w-12 h-1 bg-stone-800 rounded-full"></div>
+          </div>
+
+          <!-- App header -->
+          <div class="relative pt-8 px-6 pb-4 z-20 bg-stone-950/80 backdrop-blur-md">
+            <div class="flex justify-between items-center mb-6">
+              <div class="w-10 h-10 rounded-full bg-stone-800 flex items-center justify-center border border-stone-700/50">
+                <span class="material-symbols-outlined text-amber-500 text-sm">menu</span>
+              </div>
+              <div class="text-amber-500 font-headline font-bold text-[10px] tracking-widest">XENE LIVE CORE</div>
+              <div class="w-10 h-10 rounded-full bg-stone-800 flex items-center justify-center border border-stone-700/50">
+                <span class="material-symbols-outlined text-stone-400 text-sm">account_circle</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 rounded-full bg-[#00E5FF] animate-pulse"></div>
+              <div class="text-[10px] text-stone-400 uppercase tracking-widest font-bold">X-Feed Protocol Active</div>
+            </div>
+          </div>
+
+          <!-- Feed cards -->
+          <div class="app-feed flex-1 overflow-y-auto px-4 pb-8 space-y-4 relative z-10">
+
+            <!-- New Release Card -->
+            <div class="bg-stone-900/60 rounded-2xl border border-stone-800/50 overflow-hidden group">
+              <div class="p-4 flex flex-col gap-4">
+                <div class="flex items-center justify-between">
+                  <span class="text-[9px] font-bold text-[#00E5FF] uppercase tracking-[0.2em] border border-[#00E5FF]/30 px-2 py-0.5 rounded-full">New Drop · SoundCloud</span>
+                  <span class="text-[9px] text-stone-500">2m ago</span>
+                </div>
+                <div class="relative aspect-square rounded-xl overflow-hidden shadow-xl bg-stone-800 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-6xl text-amber-500/30" style="font-variation-settings: 'FILL' 1;">album</span>
+                  <div class="absolute inset-0 bg-stone-950/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div class="w-16 h-16 rounded-full bg-[#00E5FF] text-black flex items-center justify-center glow-cyan">
+                      <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h4 class="font-headline text-lg font-bold text-on-surface">Void Resonance EP</h4>
+                  <p class="text-xs text-stone-400 font-medium">Synthetic Soul Project · SoundCloud</p>
+                </div>
+                <div class="flex gap-2">
+                  <button class="flex-1 bg-stone-800 hover:bg-stone-700 py-2 rounded-lg text-[10px] font-bold tracking-widest uppercase transition-colors">Listen on SoundCloud ↗</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bandcamp Release Card -->
+            <div class="bg-stone-900/60 rounded-2xl border border-stone-800/50 overflow-hidden">
+              <div class="flex flex-col">
+                <div class="h-32 w-full bg-stone-800 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-5xl text-amber-500/30" style="font-variation-settings: 'FILL' 1;">library_music</span>
+                </div>
+                <div class="p-4">
+                  <div class="text-[9px] font-bold text-amber-500 uppercase tracking-widest mb-2">New Release · Bandcamp</div>
+                  <h4 class="font-headline text-sm font-bold leading-tight text-stone-100">
+                    Phase Studies Vol. III
+                  </h4>
+                  <div class="mt-3 flex items-center gap-2">
+                    <div class="w-4 h-4 rounded-full bg-amber-500/20 flex items-center justify-center">
+                      <span class="material-symbols-outlined text-[10px] text-amber-500">open_in_new</span>
+                    </div>
+                    <span class="text-[9px] text-stone-500 uppercase tracking-tighter">View on Bandcamp</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Twitch Live Card -->
+            <div class="bg-stone-900/40 rounded-2xl border border-[#9146ff]/30 p-4">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-2 h-2 rounded-full bg-[#9146ff] animate-pulse"></div>
+                <span class="text-[9px] font-bold text-[#9146ff] uppercase tracking-widest">Live on Twitch</span>
+              </div>
+              <p class="text-xs text-stone-300 font-bold">Studio Session — Beat Lab</p>
+              <p class="text-[10px] text-stone-500 mt-1">1.2k watching · Opens in Twitch ↗</p>
+            </div>
+
+          </div>
+
+          <!-- App nav bar -->
+          <div class="relative z-20 bg-stone-950/90 backdrop-blur-xl border-t border-stone-800/50 px-6 py-4 flex justify-between items-center">
+            <span class="material-symbols-outlined text-[#00E5FF]" style="font-variation-settings: 'FILL' 1;">home</span>
+            <span class="material-symbols-outlined text-stone-600">explore</span>
+            <div class="w-12 h-12 -mt-10 rounded-full bg-amber-500 text-black flex items-center justify-center glow-amber shadow-2xl border-4 border-stone-950">
+              <span class="material-symbols-outlined text-2xl font-bold">add</span>
+            </div>
+            <span class="material-symbols-outlined text-stone-600">notifications</span>
+            <span class="material-symbols-outlined text-stone-600">search</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Floating ambient widget -->
+  <div class="hidden lg:block absolute right-12 top-1/3 bg-stone-950/40 backdrop-blur-xl p-6 rounded-xl border border-outline-variant/10 shadow-2xl animate-pulse pointer-events-none">
+    <div class="flex items-center gap-4 mb-4">
+      <div class="w-2 h-2 rounded-full bg-[#00E5FF] glow-cyan"></div>
+      <span class="text-[10px] uppercase tracking-widest text-stone-500">Global Sync Active</span>
+    </div>
+    <div class="flex gap-1 items-end h-8">
+      <div class="w-1 bg-[#00E5FF] h-4"></div>
+      <div class="w-1 bg-[#00E5FF] h-7"></div>
+      <div class="w-1 bg-[#00E5FF] h-3"></div>
+      <div class="w-1 bg-amber-500 h-6"></div>
+      <div class="w-1 bg-[#00E5FF] h-8"></div>
+    </div>
+  </div>
+
+</main>
+
+
+<!-- ── ABOUT US ───────────────────────────────────────────────── -->
+<section id="about" class="relative py-32 px-8 overflow-hidden">
+
+  <!-- Ambient glow -->
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-amber-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+  <div class="max-w-screen-lg mx-auto relative z-10">
+
+    <!-- Section label -->
+    <div class="mb-4">
+      <span class="text-amber-500 font-headline font-light tracking-[0.4em] uppercase text-xs">About Us</span>
+    </div>
+
+    <h2 class="font-headline text-5xl md:text-6xl font-black text-on-surface tracking-tighter mb-12 leading-tight">
+      Built to give artists<br/>
+      <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-amber-300">
+        more reach, not less.
+      </span>
+    </h2>
+
+    <!-- Mission statement -->
+    <div class="grid md:grid-cols-2 gap-12 mb-20">
+      <div>
+        <p class="font-body text-stone-300 text-base leading-relaxed mb-6">
+          Xene is a personal artist aggregator. You add the musicians you follow —
+          their SoundCloud, Bandcamp, Twitch, and more — and Xene assembles a single
+          chronological feed of everything they publish, across every platform, in real time.
+        </p>
+        <p class="font-body text-stone-400 text-sm leading-relaxed">
+          This is not a streaming service. Xene does not host audio, redistribute content,
+          or create copies of any kind. Every item in the feed is a pointer — a notification
+          that says "your artist just dropped something" — and every click sends the fan
+          directly to the artist's original platform to experience it there.
+        </p>
+      </div>
+      <div>
+        <p class="font-body text-stone-300 text-base leading-relaxed mb-6">
+          The problem we are solving is fragmentation. An artist releases music on SoundCloud,
+          posts behind-the-scenes content on Instagram, drops a limited vinyl on Bandcamp,
+          and goes live on Twitch — all in the same week. Their fans miss most of it because
+          no single platform surfaces all of it.
+        </p>
+        <p class="font-body text-stone-400 text-sm leading-relaxed">
+          Xene closes that gap. We are a visibility amplifier, not a replacement.
+          Every platform in our ecosystem benefits: more fans discover content,
+          more fans click through, and more fans engage on the platform where
+          the artist actually lives.
+        </p>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="w-full h-px bg-gradient-to-r from-transparent via-stone-700 to-transparent mb-20"></div>
+
+    <!-- What we do / don't do -->
+    <div class="grid md:grid-cols-2 gap-8 mb-20">
+
+      <!-- Do -->
+      <div class="bg-stone-900/50 border border-stone-800/60 rounded-lg p-8">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-2 h-2 rounded-full bg-[#00E5FF]"></div>
+          <span class="font-headline text-xs uppercase tracking-widest text-[#00E5FF]">What Xene does</span>
+        </div>
+        <ul class="space-y-4 font-body text-sm text-stone-300">
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-amber-500 text-base mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            Aggregates publicly available artist activity using official platform APIs and public RSS feeds
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-amber-500 text-base mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            Sends fans directly to the artist's original platform page on every interaction
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-amber-500 text-base mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            Displays platform branding prominently so fans always know where the content originates
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-amber-500 text-base mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            Notifies fans when artists go live on Twitch, linking directly to the Twitch stream
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-amber-500 text-base mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            Operates within the rate limits, terms of service, and developer guidelines of every platform API it uses
+          </li>
+        </ul>
+      </div>
+
+      <!-- Don't -->
+      <div class="bg-stone-900/50 border border-stone-800/60 rounded-lg p-8">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-2 h-2 rounded-full bg-red-500/70"></div>
+          <span class="font-headline text-xs uppercase tracking-widest text-red-400/80">What Xene never does</span>
+        </div>
+        <ul class="space-y-4 font-body text-sm text-stone-300">
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-red-500/70 text-base mt-0.5" style="font-variation-settings: 'FILL' 1;">cancel</span>
+            Host, cache, re-stream, or redistribute audio or video content of any kind
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-red-500/70 text-base mt-0.5" style="font-variation-settings: 'FILL' 1;">cancel</span>
+            Replicate or iframe platform experiences in a way that removes traffic from the source
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-red-500/70 text-base mt-0.5" style="font-variation-settings: 'FILL' 1;">cancel</span>
+            Sell, license, or monetize any artist's content — we surface metadata and links only
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-red-500/70 text-base mt-0.5" style="font-variation-settings: 'FILL' 1;">cancel</span>
+            Scrape beyond what is publicly accessible or permitted under each platform's developer terms
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-red-500/70 text-base mt-0.5" style="font-variation-settings: 'FILL' 1;">cancel</span>
+            Allow users to download, save, or own content that belongs to a third-party platform
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Platform partners note -->
+    <div class="bg-amber-500/5 border border-amber-500/20 rounded-lg p-8 mb-12">
+      <div class="flex items-start gap-4">
+        <span class="material-symbols-outlined text-amber-500 text-2xl mt-0.5" style="font-variation-settings: 'FILL' 1;">handshake</span>
+        <div>
+          <h3 class="font-headline text-base font-bold text-amber-400 mb-3 tracking-tight">
+            A note to platform API partners and reviewers
+          </h3>
+          <p class="font-body text-stone-400 text-sm leading-relaxed mb-3">
+            If you are reviewing this application on behalf of SoundCloud, Bandcamp, Twitch,
+            or any other platform — thank you for your time. Xene was built with your platforms'
+            success in mind, not in competition with it.
+          </p>
+          <p class="font-body text-stone-400 text-sm leading-relaxed">
+            Our entire value proposition depends on your platform being the destination.
+            If fans stop going to SoundCloud, Xene stops working. We are structurally
+            aligned with your interests. We welcome any questions about our implementation,
+            our API usage patterns, or our roadmap.
+          </p>
+          <a
+            href="mailto:collab.xene@gmail.com?subject=Xene%20API%20Partnership%20Inquiry"
+            class="inline-flex items-center gap-2 mt-5 text-amber-500 text-sm font-bold font-['Space_Grotesk'] uppercase tracking-widest hover:text-amber-300 transition-colors"
+          >
+            Contact us
+            <span class="material-symbols-outlined text-base">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team / origin note -->
+    <div class="text-center">
+      <p class="font-body text-stone-500 text-sm leading-relaxed max-w-xl mx-auto">
+        Xene is an independent project built by a developer who is also a music fan.
+        It started as a personal tool to keep up with artists across a fragmented landscape
+        and grew into a product worth sharing. We are in active development and
+        open to feedback from artists, fans, and platform partners alike.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ── FOOTER ────────────────────────────────────────────────── -->
+<footer class="bg-stone-950 border-t border-stone-800/20">
+  <div class="flex flex-col md:flex-row justify-between items-center max-w-screen-2xl mx-auto gap-6 w-full py-12 px-8">
+
+    <div class="text-lg font-bold text-stone-200 font-['Space_Grotesk'] uppercase tracking-[0.2em]">XENE</div>
+
+    <div class="flex gap-8 font-['Manrope'] text-xs uppercase tracking-widest text-stone-500">
+      <a href="#about"                                                                       class="hover:text-amber-400 transition-colors">About</a>
+      <a href="mailto:collab.xene@gmail.com?subject=Xene%20Contact"                              class="hover:text-amber-400 transition-colors">Contact</a>
+      <a href="mailto:collab.xene@gmail.com?subject=Xene%20API%20Partnership%20Inquiry"          class="hover:text-amber-400 transition-colors">API Partners</a>
+    </div>
+
+    <div class="text-[10px] text-stone-500 uppercase tracking-widest font-['Manrope']">
+      © 2026 Xene. Built for fans, powered by platforms.
+    </div>
+
+  </div>
+</footer>
+
+</body>
+</html>

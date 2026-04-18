@@ -1,0 +1,108 @@
+name: Loop 1 — Security Scan
+
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  security-scan:
+    name: Security Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # ── Frontend: npm audit ────────────────────────────────────────
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install frontend dependencies
+        working-directory: xene-frontend
+        run: npm ci
+
+      - name: npm audit (frontend CVEs)
+        id: npm-audit
+        working-directory: xene-frontend
+        run: npm audit --audit-level=moderate --json > ../npm-audit-report.json || true && npm audit --audit-level=moderate
+        continue-on-error: false
+
+      # ── Backend: Python security tools ────────────────────────────
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pip"
+
+      - name: Install Python security tools
+        run: pip install bandit[toml] pip-audit detect-secrets safety
+
+      - name: Install backend dependencies
+        working-directory: xene-backend
+        run: pip install -r requirements.txt
+
+      - name: Ensure secrets baseline exists
+        run: |
+          if [ ! -f .secrets.baseline ]; then
+            detect-secrets scan > .secrets.baseline
+          fi
+
+      - name: Detect secrets
+        id: detect-secrets
+        run: detect-secrets scan --baseline .secrets.baseline
+        continue-on-error: false
+
+      - name: Bandit SAST scan (Python backend)
+        id: bandit
+        run: |
+          bandit -r xene-backend -c pyproject.toml -f json -o bandit-report.json -ll || true
+          bandit -r xene-backend -c pyproject.toml -ll
+        continue-on-error: false
+
+      - name: pip-audit CVE scan (Python backend)
+        id: pip-audit
+        working-directory: xene-backend
+        run: |
+          pip-audit --format=json --output=../pip-audit-report.json || true
+          pip-audit
+        continue-on-error: false
+
+      - name: Safety check (Python backend)
+        id: safety
+        working-directory: xene-backend
+        run: safety scan || true
+        continue-on-error: true
+
+      # ── Upload artifacts ───────────────────────────────────────────
+      - name: Upload security reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-reports-${{ github.sha }}
+          path: |
+            npm-audit-report.json
+            bandit-report.json
+            pip-audit-report.json
+            safety-report.json
+          retention-days: 90
+
+      - name: Security scan summary
+        if: always()
+        run: |
+          echo "## Loop 1 Security Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Tool | Target | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| npm audit | xene-frontend | ${{ steps.npm-audit.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| detect-secrets | all files | ${{ steps.detect-secrets.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| bandit (SAST) | xene-backend | ${{ steps.bandit.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| pip-audit (CVEs) | xene-backend | ${{ steps.pip-audit.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| safety | xene-backend | ${{ steps.safety.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Commit: ${{ github.sha }} | Scanned: $(date -u)" >> $GITHUB_STEP_SUMMARY
