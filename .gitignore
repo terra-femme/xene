@@ -55,3 +55,4 @@ npm-audit-report.json
 npm-audit-weekly.json
 safety-report.json
 semgrep-results.sarif
+gemini/ 
