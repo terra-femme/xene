@@ -193,7 +193,7 @@ def get_last_polled_batch(platform: str, artist_names: list[str]) -> dict[str, "
         return {name: None for name in artist_names}
 
 
-def get_cached_feed_items_batch(platform: str, artist_names: list[str], limit_per_artist: int = 150, days: int = 28) -> dict[str, list[dict]]:
+def get_cached_feed_items_batch(platform: str, artist_names: list[str], limit_per_artist: int = 150, days: int = 31) -> dict[str, list[dict]]:
     """Get cached feed items for multiple artists in ONE Supabase call. Returns dict keyed by artist_name."""
     if not artist_names:
         return {}
@@ -222,7 +222,7 @@ def get_cached_feed_items_batch(platform: str, artist_names: list[str], limit_pe
         return {name: [] for name in artist_names}
 
 
-def get_cached_feed_items(platform: str, artist_name: str | None = None, limit: int = 50, days: int = 28) -> list[dict]:
+def get_cached_feed_items(platform: str, artist_name: str | None = None, limit: int = 50, days: int = 31) -> list[dict]:
     """Retrieve cached feed items for a platform from the last `days` days only."""
     try:
         db = get_db()

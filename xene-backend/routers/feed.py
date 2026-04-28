@@ -137,8 +137,8 @@ async def get_merged_feed(
     # Only add tasks for the requested platform (or all if none specified)
     if not platform or platform == "soundcloud":
         async def fetch_soundcloud_with_reposts():
-            # Get regular tracks (use long lookback since artist profiles may have historical content)
-            tracks = await fetch_platform_items("soundcloud", sc, sc_name, soundcloud.get_tracks, 6, cache_days=730)
+            # Get regular tracks — only recent content (last 31 days)
+            tracks = await fetch_platform_items("soundcloud", sc, sc_name, soundcloud.get_tracks, 6, cache_days=31)
 
             # Fetch reposts for artists that have labels configured
             reposts = []
