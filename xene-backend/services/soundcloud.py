@@ -270,7 +270,6 @@ async def get_tracks(username: str, display_name: str | None = None) -> list[Fee
                         duration_seconds=int(track.get("duration", 0) / 1000),
                         play_count=track.get("playback_count"),
                         like_count=track.get("likes_count"),
-                        source_note=f"Reposted by {display_name or username}",
                     ))
                 except Exception as e:
                     logger.warning(f"[soundcloud] Skipping repost {track.get('id')}: {e}")
@@ -312,7 +311,6 @@ async def get_tracks(username: str, display_name: str | None = None) -> list[Fee
 async def get_artist_reposts_by_label(label_username: str, target_artists: list[str]) -> list[FeedItem]:
     """
     Fetch reposts from a label, filtered to only include ones crediting target artists.
-    Returns FeedItems with source_note indicating they're label reposts.
     Example: label "XL Recordings" reposts Arca — if Arca is in target_artists, include it.
     """
     if "soundcloud.com/" in label_username:
@@ -397,7 +395,6 @@ async def get_artist_reposts_by_label(label_username: str, target_artists: list[
                     "duration_seconds": item.duration_seconds,
                     "play_count": item.play_count,
                     "like_count": item.like_count,
-                    "source_note": item.source_note,
                     "updated_at": datetime.now(timezone.utc).isoformat()
                 }
                 for item in items
