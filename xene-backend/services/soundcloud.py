@@ -277,6 +277,52 @@ async def get_tracks(username: str, display_name: str | None = None) -> list[Fee
         else:
             logger.warning(f"[soundcloud] Could not fetch reposts for {username}: {repost_resp.status_code}")
 
+        # Fetch playlist/set reposts (labels release music as sets — this was never called before)
+        logger.info(f"[soundcloud] Fetching playlist reposts for {username}")
+        playlist_repost_url = f"{SC_API_BASE}/users/{user_id}/reposts/playlists"
+        pl_resp = await client.get(playlist_repost_url, headers={"Authorization": f"Bearer {token}", **_UA})
+
+        if pl_resp.status_code == 200:
+            pl_reposts_data = pl_resp.json()
+            artist_lower = (display_name or username).lower()
+            skipped = 0
+
+            for pl in pl_reposts_data:
+                try:
+                    uploader = pl.get("user", {}).get("username", "").lower()
+                    title = pl.get("title", "")
+
+                    if uploader != username.lower() and artist_lower not in title.lower():
+                        skipped += 1
+                        logger.debug(f"[soundcloud] Skip playlist repost '{title}' — not credited to {display_name or username}")
+                        continue
+
+                    raw_date = str(pl["created_at"])
+                    parts = raw_date.split(" ")
+                    date_part = parts[0].replace("/", "-")
+                    time_part = parts[1]
+                    offset_part = parts[2].replace("+0000", "+00:00")
+                    pub_at = datetime.fromisoformat(f"{date_part}T{time_part}{offset_part}")
+
+                    items.append(FeedItem(
+                        id=f"playlist-{pl['id']}",
+                        platform="soundcloud",
+                        artist_name=display_name or username,
+                        content_type="release",
+                        title=title,
+                        body=pl.get("description"),
+                        artwork_url=pl.get("artwork_url") or avatar_url,
+                        external_url=pl["permalink_url"],
+                        published_at=pub_at,
+                        track_count=pl.get("track_count"),
+                    ))
+                except Exception as e:
+                    logger.warning(f"[soundcloud] Skipping playlist repost {pl.get('id')}: {e}")
+
+            logger.info(f"[soundcloud] Got {len(pl_reposts_data) - skipped} matching playlist reposts ({skipped} skipped) for {username}")
+        else:
+            logger.warning(f"[soundcloud] Could not fetch playlist reposts for {username}: {pl_resp.status_code}")
+
     logger.info(f"[soundcloud] Built {len(items)} FeedItems for {username}")
 
     # Save to database cache
@@ -294,6 +340,7 @@ async def get_tracks(username: str, display_name: str | None = None) -> list[Fee
             "duration_seconds": item.duration_seconds,
             "play_count": item.play_count,
             "like_count": item.like_count,
+            "track_count": item.track_count,
             "updated_at": datetime.now(timezone.utc).isoformat()
         }
         for item in items
